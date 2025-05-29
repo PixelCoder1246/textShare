@@ -1,18 +1,13 @@
 require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+const express = require('express');
+const app = express();
+const cors = require('cors');
 
 const connectDB = require('./db');
 const Text = require('./models/Text');
 
-const express = require('express');
-app.use(cors({
-    origin: 'https://your-frontend-domain.com',
-    credentials: true,
-  }));
-// const { nanoid } = require('nanoid');
-
-const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -20,8 +15,13 @@ connectDB();
 
 app.post('/share', async (req, res) => {
     const { text, expiresInSeconds } = req.body;
-    const savedText = await new Text({ text, expiresAt: Date.now() + expiresInSeconds * 1000 }).save();
-    const fullLink = `${process.env.BASE_URL}/view/${savedText._id}`;
+    if (!text || !expiresInSeconds) {
+      return res.status(400).json({ error: 'Text and expiry are required' });
+    }
+    
+    const savedText = new Text({ text, expiresAt: new Date(Date.now() + expiresInSeconds * 1000)});
+    await savedText.save();
+    const fullLink = `${BASE_URL}/view/${savedText._id}`;
     res.json({ link: fullLink });
   });
 
