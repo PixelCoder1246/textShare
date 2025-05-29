@@ -27,7 +27,7 @@ function App() {
     setGeneratedLink('');
 
     try {
-      const response = await fetch(`${apiUrl}/share`, {
+      const response = await fetch(`${apiUrl}/api/share`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, expiresInSeconds: expiry }),
