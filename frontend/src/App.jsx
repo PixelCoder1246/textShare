@@ -110,7 +110,7 @@ function App() {
               {generatedLink}
             </a>
             <button onClick={handleCopy} className="copyBtn">
-              {copied ? 'Copied' : 'Copy to Clipboard'}
+              {copied ? 'Copied!' : 'Copy to Clipboard'}
             </button>
 
             {generatedLink && (
